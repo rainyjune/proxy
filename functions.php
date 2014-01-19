@@ -111,6 +111,7 @@ function setTitle($doc, $title)
   if ($titleNode)
   {
     $titleNode->nodeValue = $title;
+    $doc->getElementById('pageTitle')->nodeValue = $title;
   }
 }
 
