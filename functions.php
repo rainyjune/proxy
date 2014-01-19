@@ -10,7 +10,6 @@ function generateLocalFile($url)
   $menuArray = getMenus($menuElements);
   $listArray = getList($listElements);
   $listPageArray = getListPages($listPagesElements);
-  //var_dump($listPageArray);exit;
   saveFile($url, GBK2UTF8($title), $menuArray, $images, $listArray, $listPageArray);
 }
 function getMenus($menuElements)
@@ -35,7 +34,6 @@ function getMenus($menuElements)
 
 function getListPages($listPagesElements)
 {
-  //var_dump($listPagesElements);exit;
   $result = array('pages'=>array(),'pagesInfo'=>'');
   foreach ($listPagesElements as $key => $element) {
     if ($element->tag =='li') {
@@ -124,7 +122,7 @@ function addListPages($doc, $listPageArray)
     $li = $doc->createElement('li');
     $a = $doc->createElement('a');
     $a->nodeValue = $text;
-    $a->setAttribute("href", $link);
+    $a->setAttribute("href", getParsedUrl($link));
     $li->appendChild($a);
     $container->appendChild($li);
   }
@@ -141,7 +139,7 @@ function addList($doc, $listArray)
     $li = $doc->createElement('li');
     $a = $doc->createElement('a');
     $a->nodeValue = $text;
-    $a->setAttribute("href", $link);
+    $a->setAttribute("href", getParsedUrl($link));
     $li->appendChild($a);
     $ul->appendChild($li);
   }
@@ -158,7 +156,7 @@ function addMenus($doc, $menus)
       $li = $doc->createElement('li');
       $a = $doc->createElement('a');
       $a->nodeValue = $text;
-      $a->setAttribute("href", $link);
+      $a->setAttribute("href", getParsedUrl($link));
       $li->appendChild($a);
       $ul->appendChild($li);
     }
@@ -172,9 +170,33 @@ function addPictures($doc, $container, $images)
   foreach ($images as $element) {
     $div = $doc->createElement('div');
     $img = $doc->createElement('img');
-    $img->setAttribute('src', $element->src);
+    $img->setAttribute('src', getParsedUrl($element->src));
     $img->setAttribute('alt', 'Pic');
     $div->appendChild($img);
     $container->appendChild($div);
   }
+}
+
+function getParsedUrl($url)
+{
+  global $urlComponents;
+  if ($url == '#') {
+    return $url;
+  }
+  if (is_httpUrl($url)) {
+    return $url;
+  }
+  if ($url == '/') {
+    return 'proxy.php?url='.urlencode($urlComponents['scheme'].'://'.$urlComponents['host']);
+  }
+  if (substr($url, 0, 1) == '/') {
+    return 'proxy.php?url='.urlencode($urlComponents['scheme'].'://'.$urlComponents['host'].$url);
+  }
+  $realUrl = dirname($GLOBALS['url']).'/'.$url;
+  return 'proxy.php?url='.urlencode($realUrl);
+}
+
+function is_httpUrl($url)
+{
+  return (substr($url, 0, 7) == 'http://' || substr($url, 0, 9) == 'https://');
 }
