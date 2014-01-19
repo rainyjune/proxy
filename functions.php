@@ -26,7 +26,7 @@ function GBK2UTF8($str)
 
 function getFileName($url)
 {
-  return md5($url).".html";
+  return 'cache/'.md5($url).".html";
 }
 
 function saveFile($url,$title, $menus, $images)
