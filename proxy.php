@@ -9,12 +9,7 @@ if ($url)
   // If cache does not exists, fetch from remote server and then write into cache.
   if (!file_exists($md5FileName))
   {
-    $html = file_get_html($url);
-    $title = $html->find('title', 0)->innertext;
-    $images = $html->find('.main img');
-    $menuElements = $html->find('#menu_box ul');
-    $menuArray = getMenus($menuElements);
-    saveFile($url, GBK2UTF8($title), $menuArray, $images);
+    generateLocalFile($url);
   }
   echo file_get_contents($md5FileName);
 }

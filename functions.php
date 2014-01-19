@@ -1,4 +1,13 @@
 <?php
+function generateLocalFile($url)
+{
+  $html = file_get_html($url);
+  $title = $html->find('title', 0)->innertext;
+  $images = $html->find('.main img');
+  $menuElements = $html->find('#menu_box ul');
+  $menuArray = getMenus($menuElements);
+  saveFile($url, GBK2UTF8($title), $menuArray, $images);
+}
 function getMenus($menuElements)
 {
   $menuArray = array();
