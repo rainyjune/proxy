@@ -1,5 +1,5 @@
 <?php
-include 'simple_html_dom.php';
+include 'phplibs/simple_html_dom.php';
 include 'functions.php';
 $url = (isset($_GET['url']) && !empty($_GET['url']) && trim($_GET['url'])) ? urldecode($_GET['url']) : '';
 if ($url)
